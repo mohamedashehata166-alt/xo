@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>X O Game</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    text-align:center;
+    background:#111;
+    color:white;
+}
+
+h1{
+    color:#00ff88;
+}
+
+.board{
+    width:306px;
+    margin:20px auto;
+    display:grid;
+    grid-template-columns:repeat(3,100px);
+    gap:3px;
+}
+
+.cell{
+    width:100px;
+    height:100px;
+    font-size:50px;
+    cursor:pointer;
+    border:none;
+    background:#222;
+    color:white;
+}
+
+.cell:hover{
+    background:#333;
+}
+
+#status{
+    font-size:28px;
+    margin:20px;
+}
+
+#restart{
+    padding:10px 20px;
+    font-size:18px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🎮 X O</h1>
+
+<div class="board">
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+
+    <button class="cell"></button>
+    <button class="cell"></button>
+    <button class="cell"></button>
+</div>
+
+<div id="status">دور X</div>
+
+<button id="restart">🔄 Restart</button>
+
+<script>
+const cells = document.querySelectorAll('.cell');
+const statusText = document.getElementById('status');
+const restartBtn = document.getElementById('restart');
+
+let currentPlayer = 'X';
+let gameActive = true;
+let board = ["","","","","","","","",""];
+
+const winConditions = [
+[0,1,2],
+[3,4,5],
+[6,7,8],
+[0,3,6],
+[1,4,7],
+[2,5,8],
+[0,4,8],
+[2,4,6]
+];
+
+function checkWinner(){
+
+for(let condition of winConditions){
+
+let a=condition[0];
+let b=condition[1];
+let c=condition[2];
+
+if(
+board[a]!=="" &&
+board[a]===board[b] &&
+board[a]===board[c]
+){
+statusText.innerHTML="🎉 CONGRATULATIONS 🎉<br>الفائز: "+board[a];
+gameActive=false;
+return;
+}
+}
+
+if(!board.includes("")){
+statusText.innerHTML="🤝 تعادل";
+gameActive=false;
+}
+}
+
+cells.forEach((cell,index)=>{
+
+cell.addEventListener("click",()=>{
+
+if(board[index]!=="" || !gameActive){
+return;
+}
+
+board[index]=currentPlayer;
+cell.textContent=currentPlayer;
+
+checkWinner();
+
+if(gameActive){
+currentPlayer=currentPlayer==="X" ? "O" : "X";
+statusText.textContent="دور "+currentPlayer;
+}
+
+});
+
+});
+
+restartBtn.addEventListener("click",()=>{
+
+board=["","","","","","","","",""];
+currentPlayer="X";
+gameActive=true;
+
+statusText.textContent="دور X";
+
+cells.forEach(cell=>{
+cell.textContent="";
+});
+
+});
+</script>
+
+</body>
+</html>
